@@ -1,0 +1,63 @@
+Based on your code, here's how it maps to each presentation requirement:
+
+---
+
+**Problem Statement and Motivation**
+
+Your project addresses the question: *"How will computer hardware prices change over the next 10 years (2024–2034)?"* The motivation is that hardware prices directly affect consumers, PC builders, and businesses making purchasing decisions. You cover 9 components: CPU, GPU, RAM, SSD, HDD, Motherboard, PSU, Monitor, and CPU Cooler. You also encoded real market events as motivation — COVID demand surge (2020), global chip shortage (2021), GPU/crypto peak (2021), and market correction (2022–2023).
+
+---
+
+**Data and Methodology**
+
+Your data comes from real scraped datasets with these sizes:
+- CPU: 180 products, GPU: 376, RAM: 667, SSD: 211, HDD: 136, Motherboard: 429, PSU: 160, Case: 449, CPU Cooler: 247
+
+You then reconstructed a **72-month historical price index (Jan 2018 – Dec 2023)** calibrated to real medians. You applied **4 models**:
+
+- **ARIMA(p,d,q)** — built from scratch using Ridge regression, auto-selects best order per category by grid searching p∈[2,4,6], d∈[0,1], q∈[0,2]
+- **Holt's Damped Exponential Smoothing** — with φ=0.88 damping to prevent runaway forecasts, grid searches optimal alpha and beta
+- **AR(p) + Seasonal** — uses 12, 24, 36, and 72-month sine/cosine cycle features detected by periodogram analysis
+- **Adaptive Ensemble** — weights each model inversely proportional to its validation RMSE so the best model per category gets highest weight
+
+---
+
+**Results and Findings**
+
+Your key findings from the forecast summary are:
+
+| Component | 2023 Base | 2034 Prediction | Trend |
+|---|---|---|---|
+| CPU | $234 | $180 | ▼ falling 23.1% |
+| GPU | $462 | $452 | → stable 2.2% |
+| RAM | $51 | $35 | ▼ falling 31.7% |
+| SSD | $41 | $23 | ▼ falling 43.9% |
+| HDD | $134 | $117 | ▼ falling 12.7% |
+| Motherboard | $150 | $146 | → stable 2.6% |
+| PSU | $130 | $134 | ▲ rising 3.4% |
+| Monitor | $268 | $233 | ▼ falling 13.0% |
+| CPU Cooler | $59 | $62 | ▲ rising 4.4% |
+
+You have **5 visualizations** to show:
+- Per component forecast with all 4 model lines + confidence intervals
+- All categories overlaid on one chart with 2026/2028/2030/2032/2034 milestones
+- Heatmap of price change % by year and component
+- Validation RMSE bar chart comparing all models
+- Deep dive bar charts per component with trend lines
+
+---
+
+**Discussion and Conclusion**
+
+Key talking points from your results:
+
+- **Storage gets cheaper** — SSD drops 43.9% and RAM drops 31.7%, consistent with Moore's Law and NAND flash price trends
+- **GPU stays expensive** — only 2.2% drop over 10 years, driven by AI/gaming demand keeping prices elevated
+- **PSU and CPU Cooler slightly rise** — due to increasing power demands from more powerful CPUs and GPUs
+- **Dominant price cycles** detected by periodogram: 36-month semiconductor cycle and 72-month long supply/demand cycle appear in every category
+
+**Limitations to mention:**
+- Historical data is reconstructed/simulated from real medians, not true month-by-month historical prices
+- No external factors modeled (tariffs, new technology breakthroughs, geopolitical events)
+- ARIMA built from scratch without statsmodels may be less accurate than production implementations
+- Confidence intervals widen significantly beyond 2028, meaning long-term predictions carry high uncertainty
