@@ -1,9 +1,7 @@
 """
 =======================================================================
-  PC COMPONENTS — AUTOMATED 10-YEAR FORECAST BATCH PIPELINE (V5.1)
+  PC COMPONENTS — 10-YEAR FORECASTING
   Features: ARIMA(p,d,q) + Damped Holt's (optimized) + AR(3)+Seasonal
-            Conservative Mode: reduced lags, heavy Ridge regularization,
-            Fourier features as weak trend correctors only.
             Adaptive Inverse-Error Ensembling, Dual CI Bands (80%/95%),
             Heatmaps, Historical Event Annotations, Spectral Analysis.
   Outputs:  Line Charts, CSV Forecasts, Heatmaps, RMSE Audit Logs.
